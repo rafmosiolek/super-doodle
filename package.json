@@ -1,0 +1,29 @@
+{
+  "name": "super-doodle",
+  "version": "1.0.0",
+  "description": "Google Maps API doodles",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafmosiolek/super-doodle.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rafmosiolek/super-doodle/issues"
+  },
+  "homepage": "https://github.com/rafmosiolek/super-doodle#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-babel": "^7.0.1",
+    "gulp-cli": "^2.0.1",
+    "gulp-sass": "^3.2.1",
+    "gulp-webserver": "^0.9.1"
+  }
+}
