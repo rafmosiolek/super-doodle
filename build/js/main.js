@@ -1,21 +1,44 @@
-// const locationResult = document.querySelector("#location-result h1");
-// const getLocationCta = document.querySelector("#location-cta");
+'use strict';
 
-
-// getLocationCta.addEventListener('click', () => {
-//     console.log('wuwu');
-//     if (navigator.geolocation) {
-//         navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {timeout:10000});
-//     }
-// });
-
-// const successCallback = (position) => {
-//     let lat = position.coords.latitude;
-//     let lng = position.coords.longtitude;
-//     locationResult.innerHTML = "Your location is: " + lat + "&deg;, " + lng + "&deg;.";
-// }
-
-// const errorCallback = (error) => {
-//     locationResult.innerHTML = "Geolocation is not supported by this browser!" + error.code;
-// }
-"use strict";
+var initMap = function initMap() {
+    var mapContainer = document.querySelector("#map");
+    var mapOptions = {
+        center: {
+            lat: 51.5074,
+            lng: -0.1278
+        },
+        zoom: 13
+    };
+    var map = new google.maps.Map(mapContainer, mapOptions);
+    var marker = new google.maps.Marker({
+        position: {
+            lat: 51.5074,
+            lng: -0.1278
+        },
+        map: map
+    });
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var userLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            var userPositionMarker = new google.maps.Marker({
+                position: {
+                    lat: userLocation.lat,
+                    lng: userLocation.lng
+                },
+                map: map
+            });
+            console.log(userLocation);
+            map.setCenter(userLocation);
+        }, function () {
+            errorCallback(true, map.getCenter());
+        });
+    } else {
+        errorCallback(false, map.getCenter());
+    }
+    var errorCallback = function errorCallback(browserGeolocation, pos) {
+        browserGeolocation ? console.log('Error: The Geolocation service failed.') : console.log('Error: Your browser doesn\'t support geolocation.');
+    };
+};
