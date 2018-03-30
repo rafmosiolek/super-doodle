@@ -5,13 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Google Maps API doodles</title>
-    <!-- core CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,500" rel="stylesheet">
     <link rel="stylesheet" href="build/css/main.css">
 </head>
 <body>
     <section id="map"></section>
+    <nav id="navigation">
+        <section class="row buttons">
+            <button id="walking">walk</button>
+            <button id="driving">drive</button>
+            <button id="cycling">cycle</button>
+        </section>
+        <section class="row user-location">
+            <input type="text" placeholder="User location">
+            <button id="find-route">find route!</button>
+        </section>
+    </nav>
+    
+    
 
-    <!-- core JS  -->
+    
     <script src="build/js/main.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhfhCCBYbyvhHslmLkT5i7a5OZulnCXb0&callback=initMap"></script>
 </body>
