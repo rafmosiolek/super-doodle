@@ -12,13 +12,29 @@
     <section id="map"></section>
     <nav id="navigation">
         <section class="row buttons">
-            <button id="walking">walk</button>
-            <button id="driving">drive</button>
-            <button id="cycling">cycle</button>
+            <button value="WALKING">
+                <picture>
+                    <img class='walk' src="assets/img/walking.svg" alt="">
+                </picture>
+                walk
+            </button>
+            <button value="DRIVING">
+                <picture>
+                    <img class ='drive' src="assets/img/drive.svg" alt="">
+                </picture>
+                drive
+            </button>
+            <button value="TRANSIT">
+                <picture>
+                    <img class='transit' src="assets/img/transit.svg" alt="">
+                </picture>
+                public transport
+            </button>
+            <!-- <button id="bicycling">cycle</button> -->
         </section>
         <section class="row user-location">
             <input type="text" placeholder="User location">
-            <button id="find-route">Visit Brighton!</button>
+            <!-- <button id="find-user">find me!</button> -->
         </section>
     </nav>
     

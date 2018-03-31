@@ -17,12 +17,6 @@ const initMap = () => {
     let userLocation;
     if (navigator.geolocation) { 
         console.log('geolocation');
-        userLocation = {
-            lat: 51.490264,
-                    lng:  -0.143563
-        }
-        geocodeLatLng(geocoder, map, userLocation);
-
         let options = {
             enableHighAccuracy: true,
             timeout: 5000,
@@ -55,55 +49,65 @@ const initMap = () => {
         errorCallback(false, map.getCenter());
     }
     
-    
-    
-    // let destination = new google.maps.Marker({
-    //     position: {
-    //         lat: 51.5074,
-    //         lng: -0.1278
-    //     },
-    //     map: map,
-    //     animation: google.maps.Animation.DROP,
-    // });
-    
-    // let userPosition = new google.maps.Marker({
-    //     position: {
-    //         lat: 51.490264,
-    //         lng:  -0.143563
-    //         },
-    //     map: map,
-    //     animation: google.maps.Animation.DROP,
-    // });
-
 
 
     // const locationBtn = document.querySelector("#find-user");
     // const routeBtn = document.querySelector("#find-route");
     const routeBtn = document.querySelector("#find-route");    
     
-    routeBtn.addEventListener('click', () => {
-        console.log('click route btn');
-        calculateAndDisplayRoute(directionsService, directionsDisplay, userLocation);
-    });
+    // routeBtn.addEventListener('click', () => {
+    //     console.log('click route btn');
+    //     calculateAndDisplayRoute(directionsService, directionsDisplay, userLocation);
+    //     routeBtn.classList.add('active');
+    // });
+
+    const transportModes = document.querySelectorAll(".buttons button");
+    for (let i = 0; i < transportModes.length; i++) {
+        transportModes[i].addEventListener('click', () => {
+            
+            // transportModes.classList.remove("active");
+            // transportModes[i].classList.toggle("active");
+            let selectedMode = transportModes[i].value.toUpperCase();
+            console.log(selectedMode);
+            calculateAndDisplayRoute(directionsService, directionsDisplay, userLocation, selectedMode);
+        })
+    }
+
+
+}
+
+
+
+const geolocateUser = () => {
+    
 }
 
 
 
 
 
-const calculateAndDisplayRoute = (directionsService, directionsDisplay, startingPoint) => {
+
+const calculateAndDisplayRoute = (directionsService, directionsDisplay, startingPoint, selectedMode) => {
     console.log('calculateRoute called');
+    // const buttonDrive = document.querySelector("#driving");
+    // buttonDrive.classList.add("active");
+
+
     
     let destination = {
-        lat: 50.822624,
-        lng: -0.137112
+        // BRIGHTON
+        // lat: 50.822624,
+        // lng: -0.137112
+        // RICHMOND
+        lat: 51.444928,
+        lng: -0.276938
     }
 
     directionsService.route(
         {
             origin: startingPoint,
             destination: destination,
-            travelMode: "DRIVING",
+            travelMode: google.maps.TravelMode[selectedMode],
             provideRouteAlternatives: true,
         }, (response, status) => {
             status === "OK" ? directionsDisplay.setDirections(response) : window.alert('Directions request failed due to ' + status);

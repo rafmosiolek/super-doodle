@@ -72,7 +72,6 @@ body {
     flex-direction: column;
     bottom: 1vh;
     width: 80vw;
-    max-width: 550px;
     margin: 1em;
     background: #f3f3f3;
     opacity: 0.9;
@@ -81,14 +80,27 @@ body {
     border-radius: 4px;
     -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; }
+    @media screen and (min-width: 1024px) {
+      body #navigation {
+        width: 60vw; } }
     body #navigation button {
       background: none;
       border: none;
       padding: 1em;
+      height: 100%;
       -webkit-transition: all 0.4s ease;
       -o-transition: all 0.4s ease;
-      transition: all 0.4s ease; }
-      body #navigation button:hover, body #navigation button:active, body #navigation button:focus {
+      transition: all 0.4s ease;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+      flex-direction: column; }
+      body #navigation button:hover, body #navigation button:focus {
         color: #53D8FB; }
     body #navigation .row {
       display: -webkit-box;
@@ -110,7 +122,8 @@ body {
         -webkit-box-align: center;
         -webkit-align-items: center;
         -ms-flex-align: center;
-        align-items: center; }
+        align-items: center;
+        height: 6em; }
         body #navigation .row.buttons button {
           width: 33.33%;
           display: -webkit-box;
@@ -125,11 +138,14 @@ body {
           -webkit-align-items: center;
           -ms-flex-align: center;
           align-items: center;
-          font: 18px/28px 'Work Sans', sans-serif;
-          font-weight: 300;
+          font-size: 0;
           border-right: 1px solid #C7C7C7; }
           body #navigation .row.buttons button:last-child {
             border: none; }
+          @media screen and (min-width: 650px) {
+            body #navigation .row.buttons button {
+              font: 18px/28px 'Work Sans', sans-serif;
+              font-weight: 300; } }
           @media screen and (min-width: 1440px) {
             body #navigation .row.buttons button {
               font: 24px/34px 'Work Sans', sans-serif;
@@ -146,8 +162,8 @@ body {
         body #navigation .row.user-location input {
           background: none;
           border: none;
-          padding: 0 0 0 1em;
-          width: 66.66%;
+          padding: 1em;
+          width: 100%;
           font: 16px/24px 'Work Sans', sans-serif; }
           @media screen and (min-width: 1440px) {
             body #navigation .row.user-location input {
@@ -157,16 +173,15 @@ body {
             body #navigation .row.user-location input {
               font: 23px/31px 'Work Sans', sans-serif;
               font-weight: 300; } }
-        body #navigation .row.user-location #find-route {
-          width: 33.33%;
-          padding: 1em 0;
+        body #navigation .row.user-location #find-user {
+          width: 25%;
           font: 16px/24px 'Work Sans', sans-serif;
           font-weight: 500; }
           @media screen and (min-width: 1440px) {
-            body #navigation .row.user-location #find-route {
+            body #navigation .row.user-location #find-user {
               font: 21px/31px 'Work Sans', sans-serif;
               font-weight: 500; } }
           @media screen and (min-width: 1920px) {
-            body #navigation .row.user-location #find-route {
+            body #navigation .row.user-location #find-user {
               font: 23px/31px 'Work Sans', sans-serif;
               font-weight: 300; } }
