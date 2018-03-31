@@ -32,8 +32,15 @@ body {
             transition: all 0.4s ease;
             display: flex;
             flex-direction: column;
+            svg {
+                transition: all 0.4s ease;
+                fill: #222222;
+            }
             &:hover, &:focus {
                 color: #53D8FB;
+                svg {
+                    fill: #53D8FB;
+                }
             }
             // &.active {
             //     color: #53D8FB;
@@ -47,7 +54,10 @@ body {
                 border-bottom: 1px solid #C7C7C7;
                 justify-content: center;
                 align-items: center;
-                height: 6em;
+                height: 4em;
+                @media screen and (min-width: 650px) {
+                    height: 6em;
+                }
                 button {
                     width: 33.33%;
                     display: flex;
