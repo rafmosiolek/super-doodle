@@ -13,11 +13,18 @@ var initMap = function initMap() {
     var map = new google.maps.Map(mapContainer, mapOptions);
     var directionsService = new google.maps.DirectionsService();
     var directionsDisplay = new google.maps.DirectionsRenderer();
+    var geocoder = new google.maps.Geocoder();
     directionsDisplay.setMap(map);
 
     var userLocation = void 0;
     if (navigator.geolocation) {
         console.log('geolocation');
+        userLocation = {
+            lat: 51.490264,
+            lng: -0.143563
+        };
+        geocodeLatLng(geocoder, map, userLocation);
+
         var options = {
             enableHighAccuracy: true,
             timeout: 5000,
@@ -41,6 +48,7 @@ var initMap = function initMap() {
             });
             console.log(userLocation);
             map.setCenter(userLocation);
+            geocodeLatLng(geocoder, map, userLocation);
         }, function () {
             _errorCallback(true, map.getCenter());
         });
@@ -81,9 +89,10 @@ var calculateAndDisplayRoute = function calculateAndDisplayRoute(directionsServi
     console.log('calculateRoute called');
 
     var destination = {
-        lat: 51.5074,
-        lng: -0.1278
+        lat: 50.822624,
+        lng: -0.137112
     };
+
     directionsService.route({
         origin: startingPoint,
         destination: destination,
@@ -91,5 +100,23 @@ var calculateAndDisplayRoute = function calculateAndDisplayRoute(directionsServi
         provideRouteAlternatives: true
     }, function (response, status) {
         status === "OK" ? directionsDisplay.setDirections(response) : window.alert('Directions request failed due to ' + status);
+    });
+};
+
+var geocodeLatLng = function geocodeLatLng(geocoder, map, userLocation) {
+    var userLocationDisplay = document.querySelector(".user-location input");
+    geocoder.geocode({
+        'location': userLocation
+    }, function (results, status) {
+        if (status === 'OK') {
+            if (results[0]) {
+                console.log(results[0].formatted_address);
+                userLocationDisplay.value = results[0].formatted_address;
+            } else {
+                window.alert('No results found');
+            }
+        } else {
+            window.alert('Geocoder failed due to: ' + status);
+        }
     });
 };

@@ -11,11 +11,18 @@ const initMap = () => {
     const map = new google.maps.Map(mapContainer, mapOptions);
     const directionsService = new google.maps.DirectionsService;
     const directionsDisplay = new google.maps.DirectionsRenderer;
+    const geocoder = new google.maps.Geocoder;
     directionsDisplay.setMap(map);
 
     let userLocation;
     if (navigator.geolocation) { 
         console.log('geolocation');
+        userLocation = {
+            lat: 51.490264,
+                    lng:  -0.143563
+        }
+        geocodeLatLng(geocoder, map, userLocation);
+
         let options = {
             enableHighAccuracy: true,
             timeout: 5000,
@@ -39,6 +46,7 @@ const initMap = () => {
             });
             console.log(userLocation);
             map.setCenter(userLocation);
+            geocodeLatLng(geocoder, map, userLocation);
             
         }, () => {
             errorCallback(true, map.getCenter());
@@ -87,9 +95,10 @@ const calculateAndDisplayRoute = (directionsService, directionsDisplay, starting
     console.log('calculateRoute called');
     
     let destination = {
-        lat: 51.5074,
-        lng: -0.1278
+        lat: 50.822624,
+        lng: -0.137112
     }
+
     directionsService.route(
         {
             origin: startingPoint,
@@ -100,4 +109,22 @@ const calculateAndDisplayRoute = (directionsService, directionsDisplay, starting
             status === "OK" ? directionsDisplay.setDirections(response) : window.alert('Directions request failed due to ' + status);
         }
     );
+}
+
+const geocodeLatLng = (geocoder, map, userLocation) => {
+    let userLocationDisplay = document.querySelector(".user-location input");
+    geocoder.geocode({
+        'location': userLocation
+    }, (results, status) => {
+        if (status === 'OK') {
+            if (results[0]) {
+                console.log(results[0].formatted_address);
+                userLocationDisplay.value = results[0].formatted_address;
+            } else {
+                window.alert('No results found');
+            }
+        } else {
+            window.alert('Geocoder failed due to: ' + status);
+        }
+    });
 }

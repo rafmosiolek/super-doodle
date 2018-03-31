@@ -78,7 +78,9 @@ body {
     opacity: 0.9;
     border: 1px solid #C7C7C7;
     -webkit-border-radius: 4px;
-    border-radius: 4px; }
+    border-radius: 4px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; }
     body #navigation button {
       background: none;
       border: none;
