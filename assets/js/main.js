@@ -5,17 +5,46 @@ const initMap = () => {
             lat: 51.5074,
             lng: -0.1278
         },
-        zoom: 13,
-        mapTypeId: 'terrain'
+        zoom: 14,
+        mapTypeId: 'terrain',
+        styles: mapStyle
     }
     const map = new google.maps.Map(mapContainer, mapOptions);
     const directionsService = new google.maps.DirectionsService;
-    const directionsDisplay = new google.maps.DirectionsRenderer;
+    const directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true, preserveViewport: false});
     const geocoder = new google.maps.Geocoder;
     directionsDisplay.setMap(map);
+    geolocateUser(map, geocoder, directionsService, directionsDisplay);
 
+    
+    
+
+
+    // const locationBtn = document.querySelector("#find-user");
+    // const routeBtn = document.querySelector("#find-route");
+    const routeBtn = document.querySelector("#find-route");    
+    
+    // routeBtn.addEventListener('click', () => {
+    //     console.log('click route btn');
+    //     calculateAndDisplayRoute(directionsService, directionsDisplay, userLocation);
+    //     routeBtn.classList.add('active');
+    // });
+
+    
+
+
+}
+
+
+
+const geolocateUser = (map, geocoder, directionsService, directionsDisplay) => {
     let userLocation;
     if (navigator.geolocation) { 
+        userLocation = {
+            lat: 51.5074,
+            lng: -0.1278
+        }
+        addCustomMarker(userLocation, map, 'assets/img/userMarker.png', 'User Location');
         console.log('geolocation');
         let options = {
             enableHighAccuracy: true,
@@ -33,11 +62,7 @@ const initMap = () => {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             }
-            let userPosition = new google.maps.Marker({
-                position: userLocation,
-                map: map,
-                animation: google.maps.Animation.DROP,
-            });
+            addCustomMarker(userLocation, map, 'assets/img/_userMarker.png', 'User Location');
             console.log(userLocation);
             map.setCenter(userLocation);
             geocodeLatLng(geocoder, map, userLocation);
@@ -48,38 +73,18 @@ const initMap = () => {
     } else {
         errorCallback(false, map.getCenter());
     }
-    
+    enableUI(directionsService, directionsDisplay, userLocation, map);
+}
 
-
-    // const locationBtn = document.querySelector("#find-user");
-    // const routeBtn = document.querySelector("#find-route");
-    const routeBtn = document.querySelector("#find-route");    
-    
-    // routeBtn.addEventListener('click', () => {
-    //     console.log('click route btn');
-    //     calculateAndDisplayRoute(directionsService, directionsDisplay, userLocation);
-    //     routeBtn.classList.add('active');
-    // });
-
+const enableUI = (directionsService, directionsDisplay, userLocation, map) => {
     const transportModes = document.querySelectorAll(".buttons button");
     for (let i = 0; i < transportModes.length; i++) {
         transportModes[i].addEventListener('click', () => {
-            
-            // transportModes.classList.remove("active");
-            // transportModes[i].classList.toggle("active");
             let selectedMode = transportModes[i].value.toUpperCase();
             console.log(selectedMode);
-            calculateAndDisplayRoute(directionsService, directionsDisplay, userLocation, selectedMode);
+            calculateAndDisplayRoute(directionsService, directionsDisplay, userLocation, selectedMode, map);
         })
     }
-
-
-}
-
-
-
-const geolocateUser = () => {
-    
 }
 
 
@@ -87,7 +92,7 @@ const geolocateUser = () => {
 
 
 
-const calculateAndDisplayRoute = (directionsService, directionsDisplay, startingPoint, selectedMode) => {
+const calculateAndDisplayRoute = (directionsService, directionsDisplay, startingPoint, selectedMode, map) => {
     console.log('calculateRoute called');
     // const buttonDrive = document.querySelector("#driving");
     // buttonDrive.classList.add("active");
@@ -99,8 +104,17 @@ const calculateAndDisplayRoute = (directionsService, directionsDisplay, starting
         // lat: 50.822624,
         // lng: -0.137112
         // RICHMOND
-        lat: 51.444928,
-        lng: -0.276938
+        // lat: 51.444928,
+        // lng: -0.276938
+        // SNOWDONIA
+        // lat: 52.917950, 
+        // lng: -3.891215
+        // LAKE DISTRICT
+        // lat:54.461339, 
+        // lng: -3.088584
+        // SIR JOHN SOANE'S MUSUEM
+        lat: 51.517058, 
+        lng: -0.117470
     }
 
     directionsService.route(
@@ -108,11 +122,32 @@ const calculateAndDisplayRoute = (directionsService, directionsDisplay, starting
             origin: startingPoint,
             destination: destination,
             travelMode: google.maps.TravelMode[selectedMode],
+            unitSystem: google.maps.UnitSystem.METRIC,
             provideRouteAlternatives: true,
         }, (response, status) => {
-            status === "OK" ? directionsDisplay.setDirections(response) : window.alert('Directions request failed due to ' + status);
+            if (status === "OK") {
+                directionsDisplay.setDirections(response);
+                const leg = response.routes[0].legs[0];
+                addCustomMarker(leg.start_location, map, 'assets/img/userMarker.png', 'User location');
+                addCustomMarker(leg.end_location, map, 'assets/img/museumMarker.png', 'Sir John Soane\'s Museum');
+                
+
+            } else {
+                window.alert('Directions request failed due to ' + status);
+            }
         }
     );
+}
+
+const addCustomMarker = (position, map, icon, title) => {
+    console.log('addCustomMarker called');
+    return new google.maps.Marker({
+        position: position,
+        map: map,
+        icon: icon,
+        title: title,
+        animation: google.maps.Animation.DROP,
+    });
 }
 
 const geocodeLatLng = (geocoder, map, userLocation) => {

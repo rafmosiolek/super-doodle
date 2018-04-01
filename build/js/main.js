@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var initMap = function initMap() {
     var mapContainer = document.querySelector("#map");
@@ -7,17 +7,37 @@ var initMap = function initMap() {
             lat: 51.5074,
             lng: -0.1278
         },
-        zoom: 13,
-        mapTypeId: 'terrain'
+        zoom: 14,
+        mapTypeId: 'terrain',
+        styles: mapStyle
     };
     var map = new google.maps.Map(mapContainer, mapOptions);
     var directionsService = new google.maps.DirectionsService();
-    var directionsDisplay = new google.maps.DirectionsRenderer();
+    var directionsDisplay = new google.maps.DirectionsRenderer({ suppressMarkers: true, preserveViewport: false });
     var geocoder = new google.maps.Geocoder();
     directionsDisplay.setMap(map);
+    geolocateUser(map, geocoder, directionsService, directionsDisplay);
 
+    // const locationBtn = document.querySelector("#find-user");
+    // const routeBtn = document.querySelector("#find-route");
+    var routeBtn = document.querySelector("#find-route");
+
+    // routeBtn.addEventListener('click', () => {
+    //     console.log('click route btn');
+    //     calculateAndDisplayRoute(directionsService, directionsDisplay, userLocation);
+    //     routeBtn.classList.add('active');
+    // });
+
+};
+
+var geolocateUser = function geolocateUser(map, geocoder, directionsService, directionsDisplay) {
     var userLocation = void 0;
     if (navigator.geolocation) {
+        userLocation = {
+            lat: 51.5074,
+            lng: -0.1278
+        };
+        addCustomMarker(userLocation, map, 'assets/img/userMarker.png', 'User Location');
         console.log('geolocation');
         var options = {
             enableHighAccuracy: true,
@@ -35,11 +55,7 @@ var initMap = function initMap() {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
-            var userPosition = new google.maps.Marker({
-                position: userLocation,
-                map: map,
-                animation: google.maps.Animation.DROP
-            });
+            addCustomMarker(userLocation, map, 'assets/img/_userMarker.png', 'User Location');
             console.log(userLocation);
             map.setCenter(userLocation);
             geocodeLatLng(geocoder, map, userLocation);
@@ -49,27 +65,17 @@ var initMap = function initMap() {
     } else {
         errorCallback(false, map.getCenter());
     }
+    enableUI(directionsService, directionsDisplay, userLocation, map);
+};
 
-    // const locationBtn = document.querySelector("#find-user");
-    // const routeBtn = document.querySelector("#find-route");
-    var routeBtn = document.querySelector("#find-route");
-
-    // routeBtn.addEventListener('click', () => {
-    //     console.log('click route btn');
-    //     calculateAndDisplayRoute(directionsService, directionsDisplay, userLocation);
-    //     routeBtn.classList.add('active');
-    // });
-
+var enableUI = function enableUI(directionsService, directionsDisplay, userLocation, map) {
     var transportModes = document.querySelectorAll(".buttons button");
 
     var _loop = function _loop(i) {
         transportModes[i].addEventListener('click', function () {
-
-            // transportModes.classList.remove("active");
-            // transportModes[i].classList.toggle("active");
             var selectedMode = transportModes[i].value.toUpperCase();
             console.log(selectedMode);
-            calculateAndDisplayRoute(directionsService, directionsDisplay, userLocation, selectedMode);
+            calculateAndDisplayRoute(directionsService, directionsDisplay, userLocation, selectedMode, map);
         });
     };
 
@@ -78,9 +84,7 @@ var initMap = function initMap() {
     }
 };
 
-var geolocateUser = function geolocateUser() {};
-
-var calculateAndDisplayRoute = function calculateAndDisplayRoute(directionsService, directionsDisplay, startingPoint, selectedMode) {
+var calculateAndDisplayRoute = function calculateAndDisplayRoute(directionsService, directionsDisplay, startingPoint, selectedMode, map) {
     console.log('calculateRoute called');
     // const buttonDrive = document.querySelector("#driving");
     // buttonDrive.classList.add("active");
@@ -91,17 +95,45 @@ var calculateAndDisplayRoute = function calculateAndDisplayRoute(directionsServi
         // lat: 50.822624,
         // lng: -0.137112
         // RICHMOND
-        lat: 51.444928,
-        lng: -0.276938
+        // lat: 51.444928,
+        // lng: -0.276938
+        // SNOWDONIA
+        // lat: 52.917950, 
+        // lng: -3.891215
+        // LAKE DISTRICT
+        // lat:54.461339, 
+        // lng: -3.088584
+        // SIR JOHN SOANE'S MUSUEM
+        lat: 51.517058,
+        lng: -0.117470
     };
 
     directionsService.route({
         origin: startingPoint,
         destination: destination,
         travelMode: google.maps.TravelMode[selectedMode],
+        unitSystem: google.maps.UnitSystem.METRIC,
         provideRouteAlternatives: true
     }, function (response, status) {
-        status === "OK" ? directionsDisplay.setDirections(response) : window.alert('Directions request failed due to ' + status);
+        if (status === "OK") {
+            directionsDisplay.setDirections(response);
+            var leg = response.routes[0].legs[0];
+            addCustomMarker(leg.start_location, map, 'assets/img/userMarker.png', 'User location');
+            addCustomMarker(leg.end_location, map, 'assets/img/museumMarker.png', 'Sir John Soane\'s Museum');
+        } else {
+            window.alert('Directions request failed due to ' + status);
+        }
+    });
+};
+
+var addCustomMarker = function addCustomMarker(position, map, icon, title) {
+    console.log('addCustomMarker called');
+    return new google.maps.Marker({
+        position: position,
+        map: map,
+        icon: icon,
+        title: title,
+        animation: google.maps.Animation.DROP
     });
 };
 
